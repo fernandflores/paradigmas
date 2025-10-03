@@ -1,0 +1,119 @@
+
+-- pattern
+suma::Int->Int->Int
+
+suma a 0= a
+suma a 1= a
+suma a b= a + suma a (b-1)
+
+-- guards
+suma2::Int->Int->Int
+suma2 a b
+  | b==0 = 0
+  | b==1 = a
+  | otherwise= a + suma2 a (b-1)
+
+sumaPares::Int->Int
+sumaPares 0 = 0
+sumaPares a =
+  (if mod d 2 == 0 then d else 0) + sumaPares (n)
+  where
+    d = mod a 10
+    n = div a 10
+
+-- guards
+sumaPares2::Int->Int
+sumaPares2 a
+  | mod d 2 == 0 = d + sumaPares(n)
+  | otherwise = sumaPares(n)
+  where
+    d = mod a 10
+    n = div a 10
+  
+-- cuent alos numeros menores a 10
+contarMenores::[Int]->Int
+contarMenores[]=0
+contarMenores(x:xs)= (if (x<10) then 1 else 0) + contarMenores xs
+
+--guards
+menores::[Int]->Int
+menores xs
+  | null xs = 0
+  | head xs <10 = 1 + menores (tail xs)
+  | otherwise = menores (tail xs)
+
+-- eliminar iguales pattern machine
+eliminarIguales::[Int]->Int->[Int]
+eliminarIguales [] n=[]
+eliminarIguales (x:xs) n= (if (x==n) then eliminarIguales xs n else x : eliminarIguales xs n)
+
+-- guards
+
+eliminarIguales2::[Int]->Int->[Int]
+eliminarIguales2 xs n
+  | null xs=[] 
+  | otherwise = (if(head xs == n) then eliminarIguales2 (tail xs) n else (head xs) : eliminarIguales2 (tail xs) n) 
+
+
+-- devuelve una lista con los elementos de A que no esten en B
+diferencia::[Int]->[Int]->[Int]
+diferencia [] [] = []
+diferencia xs [] = xs
+diferencia [] xs2 = []
+diferencia (x:xs) xs2= (if r then diferencia xs xs2 else x : diferencia xs xs2)
+  where 
+    r = elem x xs2
+    
+
+diferencia2::[Int]->[Int]->[Int]
+diferencia2 xs ys
+  | null xs= []
+  | null ys= xs
+  | otherwise= (if r then diferencia2 (tail xs) ys else (head xs):diferencia2 (tail xs) ys)
+    where 
+      r = elem (head xs) ys 
+
+-- filtrar lista por funcion como parametro
+filtrar:: (a->Bool)->[a]->[a] -- (a->Bool) la lista a dara como resultado un bool
+filtrar _ []= []
+filtrar f (x:xs)= (if (f x) then x:filtrar f xs else filtrar f xs)
+
+filtrar2::(a->Bool)->[a]->[a]
+filtrar2 f xs
+  | null xs= []
+  | f (head xs) = (head xs): filtrar2 f (tail xs)
+  | otherwise = filtrar2 f (tail xs)
+
+
+transformar::(a->b)->[a]->[b] -- (a->b) la funcion manipula a y resultado es b
+transformar _ [] = []
+transformar f (x:xs)= f x : transformar f xs
+
+transformar2 :: (a->b)->[a]->[b]
+transformar2 f xs
+  | null xs = []
+  | otherwise = r : transformar2 f s
+    where
+      r = f (head xs)
+      s = (tail xs)
+
+
+
+
+main :: IO()
+main = do 
+  print (suma 3 5)
+  print (suma2 3 5)
+  print (sumaPares 456)
+  print(sumaPares2 456)
+  print (contarMenores [1,2,50,2])
+  print (menores [1,2,50,2])
+  print (eliminarIguales [1,2,1,3] 1)
+  print (eliminarIguales2 [1,2,1,3] 1)
+  print (diferencia [1,2] [2,3])
+  print (diferencia2 [1,2] [2,3])
+  print (filtrar (>5) [2,6,3,8,1])
+  print (filtrar2 (>5) [2,6,3,8,1])
+  print (transformar (*2) [1,2,3,4])
+  print (transformar2 (*2) [1,2,3,4])
+  
